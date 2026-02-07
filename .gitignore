@@ -1,0 +1,28 @@
+# Hassas veriler - KESİNLİKLE PUSH ETMEYİN
+vault.key
+vault.png
+
+# Build çıktıları (PyInstaller / Nuitka)
+build/
+dist/
+*.spec
+*.build/
+*.onefile-build/
+*.dist/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Pytest cache
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+.cursor/
+
+# OS
+Thumbs.db
+.DS_Store
