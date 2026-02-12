@@ -27,11 +27,9 @@ __pycache__/
 Thumbs.db
 .DS_Store
 
-# Web uygulama
-web/downloads/*.exe
-web/stats.json
-web/__pycache__/
+# Web kaldırıldı — bu klasör varsa push etme
+web/
 
-# Flask
-instance/
-*.pyc
+# Eski EXE kopyası (ana EXE releases/ içinde); Türkçe isimli klasör veya releases_legacy
+releases_legacy/
+şifre_güvenlik/

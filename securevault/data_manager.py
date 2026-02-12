@@ -10,6 +10,8 @@ Veri akışı (yükleme):
 import base64
 import json
 import os
+import shutil
+import subprocess
 import uuid
 from datetime import datetime
 from typing import Optional
@@ -116,7 +118,6 @@ class DataManager:
         """Dosya izinlerini sadece sahibine okuma/yazma olarak kısıtlar."""
         try:
             if os.name == "nt":
-                import subprocess
                 subprocess.run(
                     ["icacls", path, "/inheritance:r", "/grant:r",
                      f"{os.environ.get('USERNAME', '')}:(R,W)"],
@@ -179,7 +180,6 @@ class DataManager:
             if os.path.exists(src):
                 backup = f"{src}.backup_{ts}"
                 try:
-                    import shutil
                     shutil.copy2(src, backup)
                 except OSError:
                     pass

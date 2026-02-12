@@ -1,28 +1,59 @@
 # SecureVault
 
-[![Website](https://img.shields.io/badge/Website-Ziyaret_Et-blue?style=for-the-badge&logo=github)](https://SE7742.github.io/password_security/)
-[![Download](https://img.shields.io/badge/Download-SecureVault.exe-green?style=for-the-badge&logo=windows)](https://github.com/SE7742/password_security/releases/latest/download/SecureVault.exe)
+**Güvenli, çevrimdışı ve şifreli parola yöneticisi.**
 
-**Güvenli, Çevrimdışı ve Şifreli Parola Yöneticisi.**
+Bu proje **Sıdar Doğan** tarafından geliştirilmiştir.
+
+**Proje klasörü:** Mümkünse ASCII isim kullanın (örn. `sifre_guvenlik` veya `SecureVault`). Türkçe **ı/ş/ğ/ü** bazı ortamlarda sorun çıkarır. Eski `şifre_güvenlik` klasörünü yeniden adlandırmak için proje kökünde `python rename_folders.py` çalıştırabilirsiniz (klasör açık değilken).
 
 SecureVault, verilerinizi AES-256-GCM ile şifreleyen ve steganografi kullanarak bir görüntü dosyası içine gizleyen, tamamen yerel çalışan bir şifre yöneticisidir. Hiçbir sunucuya veri göndermez.
 
-## 🚀 İndir ve Kullan
+---
 
-En son sürümü **Releases** sayfasından indirebilirsiniz:
-👉 **[SecureVault.exe İndir](https://github.com/SE7742/password_security/releases/latest)**
+## İndir
 
-1. İndirin ve çalıştırın (Kurulum gerektirmez)
-2. Master parolanızı belirleyin
-3. Şifrelerinizi güvenle saklayın
+**Windows için hazır EXE:**
 
-> **Not:** Windows SmartScreen uyarısı alırsanız "Yine de çalıştır" diyerek devam edebilirsiniz. Bu uyarı imzalanmamış açık kaynak yazılımlar için normaldir.
+👉 **[SecureVault.exe indir](releases/SecureVault.exe)**
 
-## 🛠️ Kendin Derle (Build from Source)
+1. Yukarıdaki bağlantıdan veya bu depodaki `releases` klasöründen `SecureVault.exe` dosyasını indirin.
+2. Çalıştırın (kurulum yok).
+3. Master parolanızı belirleyin ve şifrelerinizi güvenle saklayın.
 
-Güvenlik konusunda hassassanız, kendi EXE dosyanızı kaynak koddan üretebilirsiniz:
+> **Not:** Windows SmartScreen uyarısı çıkarsa "Yine de çalıştır" ile devam edebilirsiniz. İmzalanmamış açık kaynak yazılımlar için normaldir.
 
-1. **Python 3.10+** yükleyin
+---
+
+## Özellikler
+
+- **AES-256-GCM şifreleme** — Endüstri standardı koruma
+- **Steganografi** — Veriler `vault.png` görselinin içine gizlenir
+- **PBKDF2 anahtar türetme** — 600.000 iterasyon
+- **Güvenli şifre üretici** — Kriptografik rastgele şifreler
+- **Not defteri** — Şifreli not saklama
+- **Sağlık raporu** — Şifre gücü ve tekrar analizi
+- **Modern arayüz** — Karanlık mod, sistem tepsisi
+
+---
+
+## Dosya yapısı (verileriniz)
+
+Verileriniz yalnızca iki dosyada tutulur:
+
+| Dosya     | Açıklama |
+|----------|----------|
+| `vault.png` | Şifrelenmiş verileriniz (yedekleyin) |
+| `vault.key` | Anahtar dosyası (EXE ile aynı klasörde oluşur) |
+
+Başka bir bilgisayara geçmek için EXE ile birlikte bu iki dosyayı kopyalamanız yeterlidir.
+
+---
+
+## Kendin derle (isteğe bağlı)
+
+Kendi EXE dosyanızı kaynak koddan üretmek isterseniz:
+
+1. **Python 3.10+** yükleyin.
 2. Bağımlılıkları kurun:
    ```bash
    pip install -r requirements.txt
@@ -34,31 +65,15 @@ Güvenlik konusunda hassassanız, kendi EXE dosyanızı kaynak koddan üretebili
    ```
 4. `dist/SecureVault.exe` dosyasını kullanın.
 
-## ✨ Özellikler
+---
 
-- 🔒 **AES-256-GCM Sifreleme** — Endüstri standardı koruma
-- 🖼️ **Steganografi** — Veriler `vault.png` görselinin içine gizlenir
-- 🔑 **PBKDF2 Anahtar Türetme** — 600.000 iterasyon
-- 🎲 **Güvenli Şifre Üretici** — Kriptografik rastgele şifreler
-- 📝 **Not Defteri** — Şifreli not saklama
-- 📊 **Sağlık Raporu** — Şifre gücü analizi
-- 🌑 **Modern Arayüz** — Karanlık mod ve kullanıcı dostu tasarım
-
-## 📂 Dosya Yapısı
-
-Verileriniz sadece iki dosyada saklanır:
-- `vault.png`: Şifrelenmiş verileriniz (bu dosyayı yedekleyin)
-- `vault.key`: Kendi oluşturduğunuz anahtar dosyanız
-
-Bu iki dosya application dizininde oluşur. Başka bir bilgisayara geçmek için EXE ile birlikte bu iki dosyayı taşımanız yeterlidir.
-
-## ⚠️ Güvenlik Uyarısı
+## Güvenlik
 
 - Master parolanızı **asla unutmayın**. Kurtarma seçeneği yoktur.
-- `vault.key` ve `vault.png` dosyalarını başkalarıyla paylaşmayın.
+- `vault.key` ve `vault.png` dosyalarını kimseyle paylaşmayın.
 
-## 📜 Lisans
+---
 
-M. Taha Doğan tarafından geliştirilmiştir.
-MIT License.
+## Lisans
 
+**Sıdar Doğan** — MIT License.
