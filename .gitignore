@@ -1,0 +1,56 @@
+# ═══ HASSAS VERİLER — KESİNLİKLE PUSH ETMEYİN ═══
+vault.key
+vault.png
+vault.key.backup_*
+vault.png.backup_*
+*.key
+*.pem
+
+# Ortam / gizli ayarlar
+.env
+.env.*
+.env.local
+.env.production
+*.env
+instance/
+stats.json
+
+# Build çıktıları (PyInstaller / Nuitka)
+build/
+dist/
+*.spec
+*.build/
+*.onefile-build/
+*.dist/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Pytest cache
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+.cursor/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Web kaldırıldı — bu klasör varsa push etme
+web/
+
+# Eski EXE kopyası (ana EXE releases/ içinde); Türkçe isimli klasör veya releases_legacy
+releases_legacy/
+şifre_güvenlik/
+
+# Sadece yerel kullanım — git history'de görünmesin
+yeni_github_repo.ps1
+remove_cursor_from_github.ps1
+remove_old_exe_from_history.py
+remove_old_exe_from_history.sh
+rename_folders.py
+.git_backup/
