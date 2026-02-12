@@ -250,6 +250,9 @@ class App:
                 if len(pw) < 8:
                     status_var.set("Parola en az 8 karakter olmalıdır.")
                     return
+                if len(pw) > 128:
+                    status_var.set("Parola en fazla 128 karakter olabilir.")
+                    return
                 if pw != confirm_var.get():
                     status_var.set("Parolalar eşleşmiyor.")
                     return

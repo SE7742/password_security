@@ -26,3 +26,12 @@ __pycache__/
 # OS
 Thumbs.db
 .DS_Store
+
+# Web uygulama
+web/downloads/*.exe
+web/stats.json
+web/__pycache__/
+
+# Flask
+instance/
+*.pyc

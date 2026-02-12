@@ -1,148 +1,64 @@
 # SecureVault
 
-Tamamen yerel calisan, AES-256-GCM sifreleme ve LSB steganografi korumalı sifre yoneticisi.
+[![Website](https://img.shields.io/badge/Website-Ziyaret_Et-blue?style=for-the-badge&logo=github)](https://SE7742.github.io/password_security/)
+[![Download](https://img.shields.io/badge/Download-SecureVault.exe-green?style=for-the-badge&logo=windows)](https://github.com/SE7742/password_security/releases/latest/download/SecureVault.exe)
 
-## Ozellikler
+**Güvenli, Çevrimdışı ve Şifreli Parola Yöneticisi.**
 
-- **AES-256-GCM Sifreleme** — Endustri standardi authenticated encryption
-- **LSB Steganografi** — Tum veriler bir PNG goruntusunun piksellerine gizlenir
-- **PBKDF2 Anahtar Turetme** — 600.000 iterasyon ile brute-force koruması
-- **Rastgele Sifre Ureteci** — `secrets` modulu ile kriptografik guvenli uretim
-- **Sifre Kasasi** — Ekleme, duzenleme, silme, kategoriler, arama ve filtreleme
-- **Guvenli Not Defteri** — AES-256 ile sifrelenmis notlar
-- **Sifre Saglik Raporu** — Guc analizi, tekrar eden sifre tespiti, 0-100 skor
-- **Master Parola Degistirme** — Mevcut verileri koruyarak parola yenileme
-- **Koyu/Acik Tema** — Catppuccin temali modern arayuz
-- **Sistem Tepsisi** — Arka planda calisma destegi
-- **Pano Guvenligi** — Kopyalanan sifreler 30 saniye sonra otomatik temizlenir
+SecureVault, verilerinizi AES-256-GCM ile şifreleyen ve steganografi kullanarak bir görüntü dosyası içine gizleyen, tamamen yerel çalışan bir şifre yöneticisidir. Hiçbir sunucuya veri göndermez.
 
-## Kurulum
+## 🚀 İndir ve Kullan
 
-### Gereksinimler
+En son sürümü **Releases** sayfasından indirebilirsiniz:
+👉 **[SecureVault.exe İndir](https://github.com/SE7742/password_security/releases/latest)**
 
-- Python 3.10+
-- Windows 10/11
+1. İndirin ve çalıştırın (Kurulum gerektirmez)
+2. Master parolanızı belirleyin
+3. Şifrelerinizi güvenle saklayın
 
-### Bagimliliklari yukleyin
+> **Not:** Windows SmartScreen uyarısı alırsanız "Yine de çalıştır" diyerek devam edebilirsiniz. Bu uyarı imzalanmamış açık kaynak yazılımlar için normaldir.
 
-```bash
-pip install -r requirements.txt
-```
+## 🛠️ Kendin Derle (Build from Source)
 
-### Uygulamayi baslatin
+Güvenlik konusunda hassassanız, kendi EXE dosyanızı kaynak koddan üretebilirsiniz:
 
-```bash
-python main.py
-```
+1. **Python 3.10+** yükleyin
+2. Bağımlılıkları kurun:
+   ```bash
+   pip install -r requirements.txt
+   pip install pyinstaller
+   ```
+3. Derleyin:
+   ```bash
+   pyinstaller --onefile --noconsole --name SecureVault main.py
+   ```
+4. `dist/SecureVault.exe` dosyasını kullanın.
 
-### EXE olusturma (opsiyonel)
+## ✨ Özellikler
 
-```bash
-pip install pyinstaller
-python -m PyInstaller --onefile --windowed --name SecureVault main.py
-```
+- 🔒 **AES-256-GCM Sifreleme** — Endüstri standardı koruma
+- 🖼️ **Steganografi** — Veriler `vault.png` görselinin içine gizlenir
+- 🔑 **PBKDF2 Anahtar Türetme** — 600.000 iterasyon
+- 🎲 **Güvenli Şifre Üretici** — Kriptografik rastgele şifreler
+- 📝 **Not Defteri** — Şifreli not saklama
+- 📊 **Sağlık Raporu** — Şifre gücü analizi
+- 🌑 **Modern Arayüz** — Karanlık mod ve kullanıcı dostu tasarım
 
-Cikti: `dist/SecureVault.exe`
+## 📂 Dosya Yapısı
 
-## Kullanim
+Verileriniz sadece iki dosyada saklanır:
+- `vault.png`: Şifrelenmiş verileriniz (bu dosyayı yedekleyin)
+- `vault.key`: Kendi oluşturduğunuz anahtar dosyanız
 
-### Ilk Calistirma
+Bu iki dosya application dizininde oluşur. Başka bir bilgisayara geçmek için EXE ile birlikte bu iki dosyayı taşımanız yeterlidir.
 
-1. Uygulama acildiginda bir **master parola** belirleyin (en az 8 karakter).
-2. Paralolayi tekrar girerek onaylayin.
-3. Vault otomatik olusturulur (`vault.key` + `vault.png`).
+## ⚠️ Güvenlik Uyarısı
 
-### Giris
+- Master parolanızı **asla unutmayın**. Kurtarma seçeneği yoktur.
+- `vault.key` ve `vault.png` dosyalarını başkalarıyla paylaşmayın.
 
-Master parolanizi girerek vault'a erisin.
+## 📜 Lisans
 
-### Sifre Ureteci
+M. Taha Doğan tarafından geliştirilmiştir.
+MIT License.
 
-- Uzunluk (8-128 karakter) ve karakter turlerini secin.
-- **Sifre Uret** ile uretin, **Panoya Kopyala** veya **Kasaya Kaydet** ile kullanin.
-
-### Sifre Kasasi
-
-- **Ekle:** Site adi, kullanici, sifre, kategori ve not girin.
-- **Duzenleme:** Listeden kayit secin, degistirin, **Guncelle**.
-- **Silme:** Kayit secin, **Sil**, onayla.
-- **Arama/Filtreleme:** Ust cubuktan arama veya kategori filtresi.
-
-### Not Defteri
-
-- Sol panelde not listesi, sagda duzenleyici.
-- **Yeni** ile olusturun, **Kaydet** ile kaydedin.
-
-### Saglik Raporu
-
-- Tum sifrelerin guc analizi ve 0-100 genel guvenlik skoru.
-- Zayif ve tekrar eden sifreleri tespit eder.
-
-### Parola Degistirme
-
-- Ust cubuktaki **Parola Degistir** butonu ile master paralanizi degistirebilirsiniz.
-- Mevcut tum veriler yeni anahtarla yeniden sifrelenir.
-
-## Guvenlik Mimarisi
-
-```
-Kaydetme:
-  JSON → AES-256-GCM Sifreleme → Base64 → LSB Steganografi → vault.png
-
-Yukleme:
-  vault.png → LSB Cikarma → Base64 Cozme → AES-256-GCM Cozme → JSON
-```
-
-| Katman | Detay |
-|--------|-------|
-| Anahtar Turetme | PBKDF2-HMAC-SHA256, 600.000 iterasyon, 32-byte salt |
-| Sifreleme | AES-256-GCM, 12-byte nonce, authenticated encryption |
-| Veri Gizleme | LSB steganografi, SHA-256 checksum |
-| Pano | 30 saniye sonra otomatik temizleme |
-
-## Dosya Yapisi
-
-```
-sifre_guvenlık/
-├── main.py
-├── requirements.txt
-├── test_all.py
-├── README.md
-├── .gitignore
-└── securevault/
-    ├── __init__.py
-    ├── constants.py        # Sabitler, temalar, kategoriler
-    ├── crypto.py           # AES-256-GCM + PBKDF2
-    ├── steganography.py    # LSB steganografi
-    ├── generator.py        # Guvenli sifre uretimi
-    ├── health.py           # Sifre guc analizi
-    ├── data_manager.py     # CRUD + sifreleme
-    └── app.py              # Tkinter GUI
-```
-
-Calisma zamaninda olusturulan dosyalar:
-
-| Dosya | Aciklama |
-|-------|----------|
-| `vault.key` | Master parola hash'i ve salt |
-| `vault.png` | Sifrelenmis verilerin gizlendigi goruntu |
-
-> **Uyari:** `vault.key` ve `vault.png` dosyalarini asla paylasmayın. Bu dosyalar `.gitignore` ile korunmaktadir.
-
-## Klavye Kisayollari
-
-| Kisayol | Islev |
-|---------|-------|
-| `Ctrl+L` | Uygulamayi kilitle |
-| `Enter` | Giris ekraninda parola gonder |
-
-## Testler
-
-```bash
-pip install pytest
-python -m pytest test_all.py -v
-```
-
-## Lisans
-
-Bu proje kisisel kullanim icin gelistirilmistir.

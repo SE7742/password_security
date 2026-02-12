@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHA-256 Doğrulama — SecureVault</title>
+    <meta name="description" content="İndirdiğiniz SecureVault.exe dosyasının bütünlüğünü SHA-256 ile doğrulayın.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen antialiased">
+    {% if is_local %}
+    <div class="bg-amber-500/15 border-b border-amber-500/30 py-2 px-4 text-center text-sm text-amber-200">
+        Bu sayfa <strong>yerel ortamda</strong> (localhost) çalışıyor. Aynı uygulamayı sunucuya deploy edip HTTPS ile yayınlayabilirsiniz.
+    </div>
+    {% endif %}
+
+    <nav class="border-b border-gray-800/50 py-4">
+        <div class="max-w-4xl mx-auto px-4 flex items-center justify-between">
+            <a href="/" class="flex items-center space-x-2 text-gray-300 hover:text-white transition">
+                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                <span class="font-semibold">SecureVault</span>
+            </a>
+            <a href="/#download" class="text-sm text-indigo-400 hover:text-indigo-300">← İndir</a>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-16">
+        <h1 class="text-3xl font-bold mb-2">SHA-256 Doğrulama</h1>
+        <p class="text-gray-400 mb-10">İndirdiğiniz dosyanın değiştirilmediğini bu hash ile kontrol edebilirsiniz.</p>
+
+        {% if exists %}
+        <div class="space-y-6">
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-gray-500 text-xs uppercase tracking-wider mb-2">Dosya</div>
+                <div class="font-mono text-lg text-indigo-300">{{ filename }}</div>
+                <div class="text-gray-400 text-sm mt-1">{{ size }}</div>
+            </div>
+
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div class="text-gray-500 text-xs uppercase tracking-wider mb-2">SHA-256 (tam hash)</div>
+                <code id="sha256-full" class="block text-sm text-indigo-200 break-all select-all cursor-pointer py-2 px-3 bg-black/20 rounded-lg font-mono">{{ full_sha256 }}</code>
+                <button type="button" onclick="copyHash()" class="mt-3 text-sm text-indigo-400 hover:text-indigo-300 font-medium">
+                    Kopyala
+                </button>
+                <p id="copy-msg" class="mt-1 text-sm text-green-400 hidden">Panoya kopyalandı.</p>
+            </div>
+
+            <div class="bg-gray-900/50 border border-gray-700/50 rounded-2xl p-6">
+                <h2 class="font-bold mb-3 text-gray-200">Windows'ta nasıl doğrularım?</h2>
+                <ol class="list-decimal list-inside space-y-2 text-gray-400 text-sm">
+                    <li>İndirdiğiniz <code class="bg-white/10 px-1 rounded">SecureVault.exe</code> dosyasının bulunduğu klasöre gidin.</li>
+                    <li>PowerShell veya CMD açın (o klasörde <kbd class="px-1.5 py-0.5 bg-white/10 rounded text-xs">Shift + Sağ tık → "PowerShell penceresini burada aç"</kbd>).</li>
+                    <li>Şu komutu çalıştırın:</li>
+                </ol>
+                <pre class="mt-4 p-4 bg-black/40 rounded-xl text-sm text-green-300 font-mono overflow-x-auto">Get-FileHash -Algorithm SHA256 .\SecureVault.exe</pre>
+                <p class="mt-3 text-gray-500 text-sm">Çıktıdaki <strong>Hash</strong> değeri yukarıdaki SHA-256 ile <strong>birebir aynı</strong> olmalıdır. Farklıysa dosya bozulmuş veya değiştirilmiş demektir.</p>
+            </div>
+        </div>
+        {% else %}
+        <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-8 text-center">
+            <p class="text-amber-200">İndirme dosyası henüz yüklenmedi. Doğrulama bilgisi mevcut değil.</p>
+            <a href="/" class="inline-block mt-4 text-indigo-400 hover:text-indigo-300 font-medium">Ana sayfaya dön</a>
+        </div>
+        {% endif %}
+    </main>
+
+    <script>
+        function copyHash() {
+            var el = document.getElementById('sha256-full');
+            if (!el) return;
+            navigator.clipboard.writeText(el.textContent).then(function() {
+                var msg = document.getElementById('copy-msg');
+                msg.classList.remove('hidden');
+                setTimeout(function() { msg.classList.add('hidden'); }, 2500);
+            });
+        }
+    </script>
+</body>
+</html>

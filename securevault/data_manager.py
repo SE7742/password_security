@@ -18,6 +18,12 @@ from securevault.constants import DEFAULT_CATEGORIES, VERSION
 from securevault.crypto import CryptoManager
 from securevault.steganography import SteganographyManager
 
+# Güvenlik limitleri
+MAX_FIELD_LENGTH = 512          # site adı, kullanıcı adı, kategori
+MAX_PASSWORD_LENGTH = 256       # şifre alanı
+MAX_NOTE_LENGTH = 65_536        # not içeriği (64 KB)
+MAX_MASTER_PASSWORD_LENGTH = 128
+
 
 class DataManager:
     """Vault verilerini yönetir: kimlik doğrulama, CRUD, ayarlar."""
@@ -45,6 +51,7 @@ class DataManager:
         stored = CryptoManager.hash_master_password(password)
         with open(self._key_file, "w", encoding="utf-8") as fh:
             json.dump(stored, fh)
+        self._restrict_file_permissions(self._key_file)
 
         self._key = CryptoManager.verify_master_password(password, stored)
         self._data = self._empty_vault()
@@ -104,6 +111,22 @@ class DataManager:
 
         return True
 
+    @staticmethod
+    def _restrict_file_permissions(path: str) -> None:
+        """Dosya izinlerini sadece sahibine okuma/yazma olarak kısıtlar."""
+        try:
+            if os.name == "nt":
+                import subprocess
+                subprocess.run(
+                    ["icacls", path, "/inheritance:r", "/grant:r",
+                     f"{os.environ.get('USERNAME', '')}:(R,W)"],
+                    capture_output=True, timeout=5,
+                )
+            else:
+                os.chmod(path, 0o600)
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+
     def lock(self) -> None:
         """Vault'u kaydeder ve anahtarı bellekten temizler."""
         if self._key and self._data:
@@ -123,7 +146,7 @@ class DataManager:
         }
 
     def _load_data(self) -> None:
-        """vault.png'den veri yükler; hata olursa boş vault oluşturur."""
+        """vault.png'den veri yükler; hata olursa yedek alıp boş vault oluşturur."""
         if not os.path.exists(self._vault_image):
             self._data = self._empty_vault()
             SteganographyManager.create_carrier_image(self._vault_image)
@@ -135,10 +158,31 @@ class DataManager:
             encrypted = base64.b64decode(encoded_data)
             decrypted = CryptoManager.decrypt(encrypted, self._key)
             self._data = json.loads(decrypted.decode("utf-8"))
-        except Exception:
+        except (ValueError, KeyError, json.JSONDecodeError) as exc:
+            # Bozuk veri — yedek al, sonra sıfırla
+            self._backup_corrupt_vault()
             self._data = self._empty_vault()
             SteganographyManager.create_carrier_image(self._vault_image)
             self.save()
+        except Exception as exc:
+            # Beklenmeyen hata — veriyi silmeden boş vault ile devam et
+            self._backup_corrupt_vault()
+            self._data = self._empty_vault()
+            SteganographyManager.create_carrier_image(self._vault_image)
+            self.save()
+
+    def _backup_corrupt_vault(self) -> None:
+        """Bozuk vault dosyalarının yedeğini alır."""
+        from datetime import datetime as _dt
+        ts = _dt.now().strftime("%Y%m%d_%H%M%S")
+        for src in (self._vault_image, self._key_file):
+            if os.path.exists(src):
+                backup = f"{src}.backup_{ts}"
+                try:
+                    import shutil
+                    shutil.copy2(src, backup)
+                except OSError:
+                    pass
 
     def save(self) -> None:
         """Vault verisini şifreler ve görüntüye gömer."""
@@ -173,7 +217,23 @@ class DataManager:
                 return p
         return None
 
+    @staticmethod
+    def _validate_entry(entry: dict) -> None:
+        """Kayıt alanlarının uzunluklarını doğrular."""
+        for key in ("site_name", "username", "category"):
+            val = entry.get(key, "")
+            if len(val) > MAX_FIELD_LENGTH:
+                raise ValueError(
+                    f"{key} çok uzun (maks {MAX_FIELD_LENGTH} karakter).")
+        if len(entry.get("password", "")) > MAX_PASSWORD_LENGTH:
+            raise ValueError(
+                f"Şifre çok uzun (maks {MAX_PASSWORD_LENGTH} karakter).")
+        if len(entry.get("notes", "")) > MAX_NOTE_LENGTH:
+            raise ValueError(
+                f"Not çok uzun (maks {MAX_NOTE_LENGTH} karakter).")
+
     def add_password(self, entry: dict) -> str:
+        self._validate_entry(entry)
         now = datetime.now().isoformat()
         record = {**entry}
         record["id"] = uuid.uuid4().hex

@@ -147,7 +147,7 @@ class SteganographyManager:
         )
 
         import random
-        rng = random.Random(42)
+        rng = random.SystemRandom()
         for _ in range(80):
             px = rng.randint(0, width - 1)
             py = rng.randint(0, height - 1)
